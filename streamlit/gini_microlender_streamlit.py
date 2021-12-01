@@ -17,15 +17,21 @@ colors = "gist_earth_r"
 sns.set_palette("gist_earth_r")
 
 
-st.sidebar.title('Data Science for Good \n Kiva Analysis & Recommender System')
+st.sidebar.title('Kiva Analysis & Recommender System')
+st.sidebar.subheader('Data Science for Good')
 
 
 
 page = st.sidebar.selectbox( 'Select a page', ('Home Page', 'Visualizations', 'Content Based Filtering', 'Kiva Teams'))
 
 if page == 'Home Page':
-    st.title('A Data Science for Good Project')
     st.header('Kiva Analysis & Recommender System')
+    st.subheader('Data Science for Good')
+
+    import webbrowser
+    url = 'https://github.com/mludwig137/gini-microloan-recommender-system'
+    if st.button('View our Project on GitHub'):
+        webbrowser.open_new_tab(url)
 
     #Kiva Introduction Video
     st.video('https://www.youtube.com/watch?v=WCraaM6PAos')
@@ -37,10 +43,7 @@ if page == 'Home Page':
 
 
     #resource https://discuss.streamlit.io/t/how-to-link-a-button-to-a-webpage/1661
-    import webbrowser
-    url = 'https://github.com/mludwig137/gini-microloan-recommender-system'
-    if st.button('View our Project on GitHub'):
-        webbrowser.open_new_tab(url)
+
 
     st.sidebar.write('Team Members :')
 
@@ -211,7 +214,7 @@ if page == 'Visualizations':
         def get_activities(sector):
 
             plt.figure(figsize=(12, 6))
-            sns.histplot(df['ACTIVITY_NAME'])
+            sns.histplot(df['ACTIVITY_NAME'], palette="gist_earth_r")
             plt.xticks(rotation=20, fontsize=12)
             plt.xlabel('Count', fontsize=14)
             plt.xticks(fontsize=12)
@@ -248,7 +251,7 @@ if page == 'Visualizations':
         def get_activities_by_country(sector, sector_country):
             # df = streamlit_df[(streamlit_df['SECTOR_NAME'] == sector) & (streamlit_df['COUNTRY_NAME'] == sector_country)]
             plt.figure(figsize=(12, 6))
-            sns.histplot(df['ACTIVITY_NAME'])
+            sns.histplot(df['ACTIVITY_NAME'], palette="gist_earth_r")
             plt.xticks(rotation=20, fontsize=12)
             plt.xlabel('Count', fontsize=14)
             plt.xticks(fontsize=12, rotation=20)
@@ -257,7 +260,7 @@ if page == 'Visualizations':
 
         def loan_average_sector_country(sector, sector_country):
             # df = streamlit_df[(streamlit_df['SECTOR_NAME'] == sector) & (streamlit_df['COUNTRY_NAME'] == sector_country)]
-            sns.barplot(x="ACTIVITY_NAME", y="LOAN_AMOUNT", data=df, estimator=np.mean, ci=None)
+            sns.barplot(x="ACTIVITY_NAME", y="LOAN_AMOUNT", data=df, estimator=np.mean, ci=None, palette="gist_earth_r")
             plt.title(f'Average Loan Amount in {sector_country} Per {sector} Activity', fontsize=16)
             plt.ylabel('Average Loan Amount', fontsize=14)
             plt.xlabel('Activity Name', fontsize=14)
@@ -266,7 +269,7 @@ if page == 'Visualizations':
         def loan_average_sector_gender(sector, sector_country):
             df = streamlit_df[(streamlit_df['SECTOR_NAME'] == sector) & (streamlit_df['COUNTRY_NAME'] == sector_country)]
             plt.figure(figsize=(12, 8))
-            sns.violinplot(x="ACTIVITY_NAME", y="LOAN_AMOUNT", data=df, split=True)
+            sns.violinplot(x="ACTIVITY_NAME", y="LOAN_AMOUNT", data=df, split=True, palette="gist_earth_r")
             plt.title(f'Average Loan Amount in {sector_country}', fontsize=16)
             plt.ylabel('Loan Amount', fontsize=14)
             plt.xlabel('Activity Name', fontsize=14)
