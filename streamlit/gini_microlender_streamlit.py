@@ -1,22 +1,27 @@
 import streamlit as st
+
+import numpy as np
 import pandas as pd
+
 import matplotlib.pyplot as plt
 import seaborn as sns
-import numpy as np
+
+from sklearn.metrics.pairwise import cosine_similarity
+
 #silence deprecationwarnings
 st.set_option('deprecation.showPyplotGlobalUse', False)
 
 
 #setting a seaborn color µ
 colors = "gist_earth_r"
-sns.set_palette(sns.color_palette(colors))
+#sns.set_palette("gist_earth_r")
 
 
 st.sidebar.title('Data Science for Good \n Kiva Analysis & Recommender System')
 
 
 
-page = st.sidebar.selectbox( 'Select a page', ('Home Page', 'Visualizations', 'Content Based', 'Kiva Teams'))
+page = st.sidebar.selectbox( 'Select a page', ('Home Page', 'Visualizations', 'Content Based Filtering', 'Kiva Teams'))
 
 if page == 'Home Page':
     st.title('A Data Science for Good Project')
@@ -479,3 +484,246 @@ if page == 'Kiva Teams':
 
 
     team_rec(user_text)
+
+# Content Based Filtering
+
+if page == "Content Based Filtering":
+
+
+    # read in dataframes
+    #loan_id_df = pd.read_csv("../data/transformed/loan_id.csv")
+    model_df = pd.read_csv("./streamlit_data/processed_content_filter_data.csv")
+    X = pd.read_csv("./streamlit_data/X_df.csv")
+
+    # X = model_df.drop(["user_favorite", "volunteer_like", "volunteer_pick", "rancor", "DESCRIPTION",
+    #                    "LOAN_AMOUNT", "LOAN_USE", "TAGS", "TAGS+", "TEXT", "PROCESSED_TEXT", "LOAN_ID"],
+    #                   axis = 1).astype(np.uint8)
+    X = X.to_numpy()
+
+    #st.set_page_config(layout="wide")
+
+    @st.cache()
+
+
+    def recommend(user):
+        """
+        user : numpy array
+
+        Takes a user interests array and finds the cosine similarity between user user_interests
+        and available loans.
+
+        Sorts cosine similarity scores by greatest to least and returns the top 5 matching loan ids
+        """
+
+        # reshape user to column vector
+        user = np.reshape(user, (1, -1))
+
+        # find cosine similarity
+        rec = cosine_similarity(X, user)
+
+        # creates an ordinal that will stand in for the dataframe index to track which scores pair with
+        # which index in the dataframe
+        ordinals = [i for i in range(len(rec.ravel()))]
+        rec_ordinal = list(zip(rec.ravel(), ordinals))
+
+        # sorts by cosine similarity score
+        sorted_index = sorted(rec_ordinal, key = lambda x: x[0], reverse=True)
+
+        # slice
+        top_loan_ids = [(x, model_df.iloc[y][0]) for x, y in sorted_index[0:5]]
+
+        return top_loan_ids
+
+    st.title("Content Based Filter")
+    st.write("Select 5 or projects you're interested in and we'll find a match.")
+    st.write("Tell us which sector interest you the most.")
+
+    cols = st.columns(5)
+    agro_sector = cols[0].checkbox("Agriculture")
+    retail_sector = cols[1].checkbox("Retail")
+    it_sector = cols[2].checkbox("Computers and Technology")
+    education_sector = cols[3].checkbox("Education")
+    health_sanitation_sector = cols[4].checkbox("Health and Sanitation")
+
+    cols2 = st.columns(5)
+    arts_sector =  cols2[0].checkbox("Arts")
+    construction_sector = cols2[1].checkbox("Construction")
+    entertainment_sector = cols2[2].checkbox("Entertainment")
+    health_sector = cols2[3].checkbox("Health")
+    manufacturing_sector = cols2[4].checkbox("Manufacturing")
+
+    st.write("Tell us about the projects and people you are interested in.")
+    st.write("Please select 5 or more")
+
+    cols3 = st.columns(5)
+    livestock = cols3[0].checkbox("Livestock")
+    water = cols3[1].checkbox("Water-Filtration")
+    women_owned = cols3[2].checkbox("Women-Owned Business")
+    blacksmith = cols3[3].checkbox("Blacksmith")
+    rrr = cols3[4].checkbox("Repair Renew Replace")
+
+    cols4 = st.columns(5)
+    dream = cols4[0].checkbox("Dream")
+    female_operated = cols4[1].checkbox("Female Operated")
+    school_fees_children = cols4[2].checkbox("School Fees(Young Children)")
+    single_mother = cols4[3].checkbox("Single Mother")
+    well_digging = cols4[4].checkbox("Well Digging")
+
+    cols5 = st.columns(5)
+    orphan = cols5[0].checkbox("Orphan")
+    medical_expenses = cols5[1].checkbox("Medical: Expenses")
+    textile = cols5[2].checkbox("Textiles")
+    dairy = cols5[3].checkbox("Dairy")
+    expand_business = cols5[4].checkbox("Expand Business")
+
+    cols7 = st.columns(5)
+    repeat_borrower = cols7[0].checkbox("Repeat Borrower")
+    family = cols7[1].checkbox("Support Families")
+    sanitation = cols7[2].checkbox("Sanitation")
+    c19 = cols7[3].checkbox("Covid-19 Relief")
+    vegan = cols7[4].checkbox("Vegan")
+
+    cols8 = st.columns(5)
+    latin = cols8[0].checkbox("Hispanic/Latinx Owned Business")
+    school_fees_adoles = cols8[1].checkbox("School Fees(Adolescent)")
+    sustainable = cols8[2].checkbox("Sustainable Agriculture")
+    senior = cols8[3].checkbox("Senior Person(s)")
+    job_creator = cols8[4].checkbox("Job Creator")
+
+    if st.button("Fund an entrepeneur."):
+        print(agro_sector)
+
+        # an array of zeros equal in length to numbero f columns in x to examine cosine similarity with user/user user_interests
+        # and available loans
+        user = np.zeros(X.shape[1])
+
+        # Pairing column number with column name allowing for manual selection and grouping user interests
+        # [print(f"{i} {j}") for i, j in enumerate(X_df.columns)]
+
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+        # Sector and Industry                                                                   #
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+
+        if agro_sector == True: # = cols[0].checkbox("Agriculture")
+            user[[10, 172]] = 1
+
+        elif retail_sector == True: # = cols[1].checkbox("Retail")
+            user[[16, 19, 23 , 43, 70, 92]] = 1
+
+        elif it_sector == True: #= cols[2].checkbox("Computers and Technology")
+            user[[46, 47, 91, 183]] = 1
+
+        elif education_sector == True: #= cols[3].checkbox("Education")
+            user[[176, 132]] = 1
+
+        elif health_sanitation_sector == True: #= cols[4].checkbox("Health and Sanitation")
+            user[[179, 85]] = 1
+
+        elif arts_sector == True: # =  cols2[0].checkbox("Arts")
+            user[[14, 173, 61]] = 1
+
+        elif construction_sector == True:# = cols2[1].checkbox("Construction")
+            user[[48, 49, 175]] = 1
+
+        elif entertainment_sector == True:#= cols2[2].checkbox("Entertainment")
+            user[[80, 177, 63]] = 1
+
+        elif health_sector == True: #= cols2[3].checkbox("Health")
+            user[179, 132, 102] = 1
+
+        elif manufacturing_sector == True: #= cols2[4].checkbox("Manufacturing")
+            user[[181, 101]] = 1
+
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+    # Projects and People                                                                   #
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
+
+        elif livestock == True: #= cols3[0].checkbox("Livestock")
+            user[[187, 129, 131, 20]] = 1
+
+        elif water == True: #= cols3[1].checkbox("Water-Filtration")
+            user[[240, 228]] = 1
+
+        elif women_owned == True: #= cols3[2].checkbox("Women-Owned Business")
+            user[[222]] = 1
+
+        elif blacksmith == True: #= cols3[3].checkbox("Blacksmith")
+            user[[24]] = 1
+
+        elif rrr == True: #= cols3[4].checkbox("Repair Renew Replace")
+            user[[206, 48, 49, ]] = 1
+
+        elif dream == True: #= cols4[0].checkbox("Dream")
+            user[[227]] = 1
+
+        elif female_operated == True: #= cols4[1].checkbox("Female Operated")
+            user[[0]] = 1
+
+        elif school_fees_children == True: #= cols4[2].checkbox("School Fees(Young Children)")
+            user[[223, 224, 238, 224, 208]] = 1
+
+        elif single_mother == True: #= cols4[3].checkbox("Single Mother")
+            user[[239]] = 1
+
+        elif well_digging == True: #= cols4[4].checkbox("Well Digging")
+            user[[170]] = 1
+
+        elif orphan == True: #= cols5[0].checkbox("Orphan")
+            user[[202]] = 1
+
+        elif medical_expenses == True: #= cols5[1].checkbox("Medical: Expenses")
+            user[[236]] = 1
+
+        elif textile == True: #= cols5[2].checkbox("Textiles")
+            user[[154]] = 1
+
+        elif dairy == True: #= cols5[3].checkbox("Dairy")
+            user[[53]] = 1
+
+        elif expand_business == True: #= cols5[4].checkbox("Expand Business")
+            user[[229, 230]] = 1
+
+        elif repeat_borrower == True: #= cols7[0].checkbox("Repeat Borrower")
+            user[[207]] = 1
+
+        elif family == True: #= cols7[1].checkbox("Support Families")
+            user[[239, 235, 203, 210, 211]] = 1
+
+        elif sanitation == True: #= cols7[2].checkbox("Sanitation")
+            user[[194, 237, 234]] = 1
+
+        elif c19 == True: #= cols7[3].checkbox("Medical: Covid-19")
+            user[[225]] = 1
+
+        elif vegan == True: #= cols7[4].checkbox("Vegan")
+            user[[220]] = 1
+
+        elif latin == True: #= cols8[0].checkbox("Hispanic/Latinx Owned Business")
+            user[[199]] = 1
+
+        elif school_fees_adoles == True: #= cols8[1].checkbox("School Fees(Adolescent)")
+            user[[233, 238, 208]] = 1
+
+        elif sustainable == True: #= cols8[2].checkbox("Sustainable Agriculture")
+            user[[189, 212]] = 1
+
+        elif senior == True: #= cols8[3].checkbox("Senior Person")
+            user[[190]] = 1
+
+        elif job_creator == True: #= cols8[4].checkbox("Job Creator")
+            user[[198]] = 1
+
+
+        recommendations = recommend(user)
+
+        st.write(recommendations)
+
+        # for i in range(5):
+        #     loan_id = recommendations[i][1]
+        #     base_url = 'https://api.kivaws.org/graphql?query='
+        #     graphql_query = '{lend {loan (id: %s){id name gender image {id url}  }}}'   %loan_id
+        #
+        #     r = requests.post(base_url+ graphql_query)
+        #     r = r.json()
+        #     url = r['data']['lend']['loan']['image']['url']
