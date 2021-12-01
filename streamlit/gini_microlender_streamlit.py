@@ -11,11 +11,75 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 colors = "gist_earth_r"
 sns.set_palette(sns.color_palette(colors))
 
-st.title('Microloan Recommender System')
 
-page = st.sidebar.selectbox( 'Select a page', ('Visualizations', 'Other'))
+st.sidebar.title('Data Science for Good \n Kiva Analysis & Recommender System')
+
+
+
+page = st.sidebar.selectbox( 'Select a page', ('Home Page', 'Visualizations', 'Content Based', 'Kiva Teams'))
+
+if page == 'Home Page':
+    st.title('A Data Science for Good Project')
+    st.header('Kiva Analysis & Recommender System')
+
+    #Kiva Introduction Video
+    st.video('https://www.youtube.com/watch?v=WCraaM6PAos')
+
+
+    #base64_pdf = base64.b64encode(f.read('./Project 3 - Reddit NLP Classification.pdf')).decode('utf-8')
+    #pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
+    #st.markdown(pdf_display, unsafe_allow_html=True)
+
+
+    #resource https://discuss.streamlit.io/t/how-to-link-a-button-to-a-webpage/1661
+    import webbrowser
+    url = 'https://github.com/mludwig137/gini-microloan-recommender-system'
+    if st.button('View our Project on GitHub'):
+        webbrowser.open_new_tab(url)
+
+    st.sidebar.write('Team Members :')
+
+    #inspired by this personal website : https://github.com/v4gadkari/vgpersonalwebsite/blob/main/streamlit_app.py
+    st.sidebar.info('Terri John')
+    links_terri = ['https://www.linkedin.com/in/terri-john/', 'https://github.com/tjohn07']
+    cols1, cols2 = st.sidebar.columns(2)
+    linkedIn_terri = cols1.button('LinkedIn', key='a')
+    github_terri = cols2.button('Github', key='b')
+
+    if linkedIn_terri == True:
+        webbrowser.open_new_tab(links_terri[0])
+        #st.sidebar.markdown(links_terri[0])
+    if github_terri == True:
+        webbrowser.open_new_tab(links_terri[1])
+
+    st.sidebar.info('Matthew Ludwig')
+    links_matthew = ['https://www.linkedin.com/in/matthewjwjludwig/', 'https://github.com/mludwig137']
+    cols3, cols4 = st.sidebar.columns(2)
+    linkedIn_matthew = cols3.button('LinkedIn', key='c')
+    github_matthew = cols4.button('Github', key='d')
+
+    if linkedIn_matthew == True:
+        webbrowser.open_new_tab(links_matthew[0])
+    if github_matthew == True:
+        webbrowser.open_new_tab(links_matthew[1])
+
+    st.sidebar.info('Brian Rubin')
+    links_brian = ['https://www.linkedin.com/in/brian-f-rubin/', 'https://github.com/brianfrubin']
+    cols5, cols6 = st.sidebar.columns(2)
+    linkedIn = cols5.button('LinkedIn', key='e')
+    github = cols6.button('Github', key='f')
+
+    if linkedIn == True:
+        webbrowser.open_new_tab(links_brian[0])
+    if github == True:
+        webbrowser.open_new_tab(links_brian[1])
 
 if page == 'Visualizations':
+    st.sidebar.write('Overview:')
+    st.sidebar.info('Data by Country')
+    st.sidebar.info('Data by Sector')
+    st.sidebar.info('Compare Two Countries')
+    st.sidebar.info('General Visualizations')
 
     #inspiration for several plots on this page came from: https://practicaldatascience.co.uk/data-science/how-to-visualise-categorical-data-in-seaborn
 
@@ -353,3 +417,65 @@ if page == 'Visualizations':
         st.image('./images/top_10_female.png')
         st.image('./images/low_fem_sec.png')
         st.image('./images/low_fem_sec2.png')
+
+if page == 'Kiva Teams':
+    st.title('Kiva Teams')
+    st.subheader('User Based Recommender System')
+    st.write('------------------------------------')
+
+    @st.cache
+    def load_rec():
+        recommender = pd.read_csv('./streamlit_data/team_recommender.csv')
+        recommender.set_index('LENDERS', inplace=True)
+        return recommender
+
+    recommender = load_rec()
+    st.dataframe(recommender.head())
+    st.write(recommender.shape)
+    st.write('------------------------------------')
+
+    user_text = st.text_input('Please enter your Kiva User ID:', value='2viljoens')
+    st.write('------------------------------------')
+
+    def team_rec(input):
+        search = input
+        output = recommender[search].sort_values()[1:25]
+        top_users = []
+        for user in output.index:
+            top_users.append(user)
+
+        import requests
+        count = 0
+        print("Kiva Teams we think you might you like:")
+        print('\n')  #make space between print statements - https://stackoverflow.com/questions/10081538/how-do-i-make-spaces-between-paragraphs-in-my-python-script
+        st.subheader('We Found These 5 Kiva Teams For You:')
+        st.write('------------------------------------')
+        for user in top_users:
+            base_url = f'https://api.kivaws.org/v1/lenders/{user}/teams.json'
+
+            try:
+                r = requests.get(base_url)
+                r = r.json()
+                team_name = r['teams'][0]['name']
+                description = r['teams'][0]['description']
+                loan_because = r['teams'][0]['loan_because']
+                loans_made = r['teams'][0]['loan_count']
+                how_much = r['teams'][0]['loaned_amount']
+                count += 1
+
+                container = st.container()
+                container.write(f'Team {count}')
+                container.write(f'Team Name : {team_name}')
+                container.write(f'Description : {description}')
+                container.write(f'Why We Loan : {loan_because}')
+                container.write(f'Number of Loans Made : {loans_made}')
+                container.write(f'How Much We Loaned : ${how_much}')
+                container.write('\n')
+                st.write('------------------------------------')
+                if count == 5:
+                    break
+            except Exception:
+                pass
+
+
+    team_rec(user_text)
