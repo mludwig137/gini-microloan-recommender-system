@@ -14,7 +14,7 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 #setting a seaborn color µ
 colors = "gist_earth_r"
-#sns.set_palette("gist_earth_r")
+sns.set_palette("gist_earth_r")
 
 
 st.sidebar.title('Data Science for Good \n Kiva Analysis & Recommender System')
@@ -387,7 +387,7 @@ if page == 'Visualizations':
                 ax.set_ylim(0, 1.0);
 
         def side_by_side_loan_amount(country_name_1, country_name_2):
-            df = streamlit_df[(streamlit_df['COUNTRY_NAME'] == 'Afghanistan') | (streamlit_df['COUNTRY_NAME'] == 'Pakistan')]
+            df = streamlit_df[(streamlit_df['COUNTRY_NAME'] == country_name_1) | (streamlit_df['COUNTRY_NAME'] == country_name_2)]
             plt.figure(figsize=(12, 8))
             sns.violinplot(x="COUNTRY_NAME", y="LOAN_AMOUNT", hue="FEMALE_OPERATED", data=df, split=True)
             plt.title(f'Average Loan Amounts in {country_name_1} and {country_name_2}', fontsize=16)
@@ -411,17 +411,17 @@ if page == 'Visualizations':
 
     if user_choice == 'General Visualizations':
         st.write('The number of loans funded per year shows an upward trend from 2006-2018. There appears to be a slight decrease in 2018, followed by a sharp decrease that appears to precede the onset of the COVID-19 pandemic.')
-        st.image('./images/loans_over_time.png')
+        st.image('./streamlit_images/loans_over_time.png')
         st.write('According to Kiva\'s website, field partners have the option to distribute loans before, during, or after a loan is posted on the site. 93% of loans are disbursed before they are even posted. Read more about this process on Kiva\'s site: https://www.kiva.org/about/how#faq-hkw-section')
-        st.image('./images/loan_dist_pie_chart.png')
+        st.image('./streamlit_images/loan_dist_pie_chart.png')
         st.write('66% of all Kiva loans go to individual women, vs. individual men(20%) and groups(13%).')
-        st.image('./images/borrower_comp.png')
-        st.image('./images/loans_by_sector.png')
-        st.image('./images/sector_and_country.png')
-        st.image('./images/loans_per_lender.png')
-        st.image('./images/top_10_female.png')
-        st.image('./images/low_fem_sec.png')
-        st.image('./images/low_fem_sec2.png')
+        st.image('./streamlit_images/borrower_comp.png')
+        st.image('./streamlit_images/loans_by_sector.png')
+        st.image('./streamlit_images/sector_and_country.png')
+        st.image('./streamlit_images/loans_per_lender.png')
+        st.image('./streamlit_images/top_10_female.png')
+        st.image('./streamlit_images/low_fem_sec.png')
+        st.image('./streamlit_images/low_fem_sec2.png')
 
 if page == 'Kiva Teams':
     st.title('Kiva Teams')
