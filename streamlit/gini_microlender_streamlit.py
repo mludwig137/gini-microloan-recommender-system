@@ -32,60 +32,37 @@ page = st.sidebar.selectbox( 'Select a page', ('Home Page', 'Visualizations', 'C
 if page == 'Home Page':
     st.header('Kiva Analysis & Recommender System')
     st.subheader('Data Science for Good')
+    #streamlit forum solution on how to create images with embedded links : https://discuss.streamlit.io/t/how-can-i-add-a-url-link-to-an-image/13997
+    st.markdown("[![Foo](https://www-kiva-org.global.ssl.fastly.net/cms/kiva_logo_1.png)](https://www.kiva.org/)")
 
-    import webbrowser
-    url = 'https://github.com/mludwig137/gini-microloan-recommender-system'
-    if st.button('View our Project on GitHub'):
-        webbrowser.open_new_tab(url)
+
 
     #Kiva Introduction Video
     st.video('https://www.youtube.com/watch?v=WCraaM6PAos')
 
-
-    #base64_pdf = base64.b64encode(f.read('./Project 3 - Reddit NLP Classification.pdf')).decode('utf-8')
-    #pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf">'
-    #st.markdown(pdf_display, unsafe_allow_html=True)
-
-
-    #resource https://discuss.streamlit.io/t/how-to-link-a-button-to-a-webpage/1661
-
+    git, slides = st.columns(2)
+    git.success('Project GitHub Source')
+    git.markdown("[![Foo](https://img.icons8.com/material-outlined/96/000000/github.png)](https://github.com/mludwig137/gini-microloan-recommender-system)")
+    slides.success('Project Slides')
+    slides.markdown("[![Foo](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Google_Slides_logo_%282014-2020%29.svg/72px-Google_Slides_logo_%282014-2020%29.svg.png)](https://docs.google.com/presentation/d/1tLYIMdbjOniqPUQpQOYjEvaOj-24g1e41QbFLGiLISc/edit#slide=id.p)")
 
     st.sidebar.write('Team Members :')
 
     #inspired by this personal website : https://github.com/v4gadkari/vgpersonalwebsite/blob/main/streamlit_app.py
     st.sidebar.info('Terri John')
-    links_terri = ['https://www.linkedin.com/in/terri-john/', 'https://github.com/tjohn07']
     cols1, cols2 = st.sidebar.columns(2)
-    linkedIn_terri = cols1.button('LinkedIn', key='a')
-    github_terri = cols2.button('Github', key='b')
-
-    if linkedIn_terri == True:
-        webbrowser.open_new_tab(links_terri[0])
-        #st.sidebar.markdown(links_terri[0])
-    if github_terri == True:
-        webbrowser.open_new_tab(links_terri[1])
+    cols1.markdown("[![Foo](https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Linkedin_unofficial_colored_svg-48.png)](https://www.linkedin.com/in/terri-john/)")
+    cols2.markdown("[![Foo](https://img.icons8.com/material-outlined/48/000000/github.png)](https://github.com/tjohn07)")
 
     st.sidebar.info('Matthew Ludwig')
-    links_matthew = ['https://www.linkedin.com/in/matthewjwjludwig/', 'https://github.com/mludwig137']
     cols3, cols4 = st.sidebar.columns(2)
-    linkedIn_matthew = cols3.button('LinkedIn', key='c')
-    github_matthew = cols4.button('Github', key='d')
-
-    if linkedIn_matthew == True:
-        webbrowser.open_new_tab(links_matthew[0])
-    if github_matthew == True:
-        webbrowser.open_new_tab(links_matthew[1])
+    cols3.markdown("[![Foo](https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Linkedin_unofficial_colored_svg-48.png)](https://www.linkedin.com/in/matthewjwjludwig/)")
+    cols4.markdown("[![Foo](https://img.icons8.com/material-outlined/48/000000/github.png)](https://github.com/mludwig137)")
 
     st.sidebar.info('Brian Rubin')
-    links_brian = ['https://www.linkedin.com/in/brian-f-rubin/', 'https://github.com/brianfrubin']
     cols5, cols6 = st.sidebar.columns(2)
-    linkedIn = cols5.button('LinkedIn', key='e')
-    github = cols6.button('Github', key='f')
-
-    if linkedIn == True:
-        webbrowser.open_new_tab(links_brian[0])
-    if github == True:
-        webbrowser.open_new_tab(links_brian[1])
+    cols5.markdown("[![Foo](https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Linkedin_unofficial_colored_svg-48.png)](https://www.linkedin.com/in/brian-f-rubin/)")
+    cols6.markdown("[![Foo](https://img.icons8.com/material-outlined/48/000000/github.png)](https://github.com/brianfrubin)")
 
 if page == 'Visualizations':
     st.sidebar.write('Overview:')
@@ -470,13 +447,14 @@ if page == 'Kiva Teams':
         recommender = pd.read_csv('./streamlit_data/team_recommender.csv')
         recommender.set_index('LENDERS', inplace=True)
         return recommender
-
+        
+    st.caption('User Matrix Visualization')
     recommender = load_rec()
     st.dataframe(recommender.head())
     st.write(recommender.shape)
     st.write('------------------------------------')
 
-    user_text = st.text_input('Please enter your Kiva User ID:', value='2viljoens')
+    user_text = st.text_input('Please enter your Kiva User ID:', value='Enter User ID')
     st.write('------------------------------------')
 
     def team_rec(input):
@@ -519,8 +497,12 @@ if page == 'Kiva Teams':
             except Exception:
                 pass
 
+    if st.text_input:
+        try:
+            print(team_rec(user_text))
+        except Exception:
+            pass
 
-    team_rec(user_text)
 
 # Content Based Filtering
 
