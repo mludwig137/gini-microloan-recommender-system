@@ -21,10 +21,11 @@ This ReadMe contains:
 
 |Name|File Type|Description|
 |---|---|--|
-|01_Cleaning_and_Data_Visualizations|Jupyter Notebook|Cleans the data to prepare for modeling. Data Visualizations.|
+|01_Data_Engineering|Jupyter Notebook|Cleans the data to prepares non-NLP data for modeling. Initial EDA.|
 |02_Preprocessing|Jupyter Notebook|Processes NLP data for visualizations and modeling.|
 |03_Modeling|Jupyter Notebook|Builds a content based recommender system.|
 |04_User_Model|Jupyter Notebook|Builds a user based recommender system for groups.|
+|Data_Visualizations|Jupyter Notebook|Explores the data through visualizations|
 |data|folder|contains csv files of data used|
 |images|folder|contains saved plot images|
 |streamlit|folder|contains streamlit.py file, folder with streamlit images, folder with streamlit data files|
