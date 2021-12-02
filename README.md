@@ -69,8 +69,60 @@ This dataset consists of 3 csv files:
 |loans_lenders.csv|a list of loans and the contributing lenders|[Jump to the data dictionary](#lldict)|
 |loans.csv|loans and their attributes|[Jump to the data dictionary](#loansdict)|
 
+
+#### Data Cleaning Steps: loans.csv
+1. Dropped nulls:  Nulls banded by age and rows with majority missing values.
+2. Combined Description and Description translated columns to have one Description column in English.
+3. Engineered a binarized column based on the BORROWER_GENDERS column. This column is a 1 if all borrowers are female, and is otherwise a 0.
+4. get_dummies of columns ORIGINAL_LANGUAGE, ACTIVITY_NAME, and SECTOR_NAME to prepare for modeling.
+5. Dropped columns that were unneeded for our recommender system:
+
+
+### Project Requirements:   
+* streamlit==1.1.0
+* joblib==1.1.0
+* pandas==1.2.4
+* scikit-learn==1.0.1
+
+## <a name="model"></a>Modeling and Analysis
+We created 2 main recommender system models:
+1. [Content Based Model](#content)
+2. [User Based Model](#user)
+
+
+### <a name="content"></a>  Content Based Model
+
+
+
+### <a name="user"></a> User Based Model
+
+
+
+
+## <a name="conclusion"></a>Conclusion:
+### Limitations and Recommendations for next steps:
+Throughout the course of this project, we observed the need for further actions in several capacities:
+
+* True P2P Microloan future utilizing decentralized financial systems.
+* Recommender system improvements - data size constraints limiting the ability to process all the data at once. Downsampled to create proof of concept systems.  
+* While we reached out to the Grameen Bank in the hopes of gaining access to data related to their microlending operation, we did not receive a response. We recommend gathering data from several microlending organizations to compare effectiveness of differing strategies. It would be particularly interesting to study data from Zidisha, an organization which focuses solely on direct lender to entrepreneur loans, without an intermediary such as a field partner.
+
+(source: https://www.zidisha.org/how-it-works)
+
+
+
+### <a name="sources"></a>Sources
+
+* NobelPrize.org: https://www.nobelprize.org/prizes/peace/2006/summary/
+* Muhammad Yunus biography: https://www.nobelprize.org/prizes/peace/2006/yunus/facts/
+* PBS Frontline: https://www.pbs.org/frontlineworld/stories/uganda601/history.html
+* Zidisha: https://www.zidisha.org/how-it-works
+* Kiva: https://www.kiva.org/
+
 ### <a name="dict"></a>Data Dictionaries:
-#### <details><summary><a name="loansdict"></a>loans.csv</summary>
+[Jump back to the Data Description](#data)
+#### <a name="loansdict"></a>loans.csv
+
 |Column|Data Type|Description|
 |---|---|---|
 LOAN_ID|int|unique loan ID number|
@@ -108,16 +160,18 @@ BORROWER_PICTURED|object|unused column|
 REPAYMENT_INTERVAL|object|unused column|
 DISTRIBUTION_MODEL|object|unused column|
 FEMALE_OPERATED|int|engineered column - binarized form of BORROWER_GENDERS. 1 if borrower(s) all female, otherwise 0.|
-</details>
 
-#### <details><summary><a name="lldict"></a>loans_lenders.csv</summary>
+[Jump back to the Data Description](#data)
+#### <a name="lldict"></a>loans_lenders.csv
+
 |Column|Data Type|Description|
 |---|---|---|
 |LOAN_ID|int|unique loan ID number|
 |LENDERS|object|list of lenders who contributed to a loan.|
 </details>
 
-#### <details><summary><a name="lendersdict"></a>lenders.csv</summary>
+#### <a name="lendersdict"></a>lenders.csv
+
 |Column|Data Type|Description|
 |---|---|---|
 |PERMANENT_NAME|object|username|
@@ -134,56 +188,5 @@ FEMALE_OPERATED|int|engineered column - binarized form of BORROWER_GENDERS. 1 if
 |LOAN_PURCHASE_NUM|int|loans contributed to|
 |INVITED_BY|object|username of lender who invited new user|
 |NUM_INVITED|int|number of people a user has invited to join the site|
-</details>
 
-#### Data Cleaning Steps: loans.csv
-1. Dropped nulls:  Nulls banded by age and rows with majority missing values.
-2. Combined Description and Description translated columns to have one Description column in English.
-3. Engineered a binarized column based on the BORROWER_GENDERS column. This column is a 1 if all borrowers are female, and is otherwise a 0.
-4. get_dummies of columns ORIGINAL_LANGUAGE, ACTIVITY_NAME, and SECTOR_NAME to prepare for modeling.
-5. Dropped columns that were unneeded for our recommender system:
-
-
-### Project Requirements:   
-* streamlit==1.1.0
-* joblib==1.1.0
-* pandas==1.2.4
-* scikit-learn==1.0.1
-
-## <a name="model"></a>Modeling and Analysis
-We created 2 main recommender system models:
-1. [Content Based Model](#content)
-2. [User Based Model](#user)
-
-
-### <a name="content"></a>  Content Based Model
-
-
-
-### <a name="user"></a> User Based Model
-
-
-
-
-## <a name="conclusion"></a>Conclusion:
-
-
-
-### Limitations and Recommendations for next steps:
-Throughout the course of this project, we observed the need for further actions in several capacities:
-
-* True P2P Microloan future utilizing decentralized financial systems.
-* Recommender system improvements - data size constraints limiting the ability to process all the data at once. Downsampled to create proof of concept systems.  
-* While we reached out to the Grameen Bank in the hopes of gaining access to data related to their microlending operation, we did not receive a response. We recommend gathering data from several microlending organizations to compare effectiveness of differing strategies. It would be particularly interesting to study data from Zidisha, an organization which focuses solely on direct lender to entrepreneur loans, without an intermediary such as a field partner.
-
-(source: https://www.zidisha.org/how-it-works)
-
-
-
-### <a name="sources"></a>Sources
-
-* NobelPrize.org: https://www.nobelprize.org/prizes/peace/2006/summary/
-* Muhammad Yunus biography: https://www.nobelprize.org/prizes/peace/2006/yunus/facts/
-* PBS Frontline: https://www.pbs.org/frontlineworld/stories/uganda601/history.html
-* Zidisha: https://www.zidisha.org/how-it-works
-* Kiva: https://www.kiva.org/
+[Jump back to the Data Description](#data)
