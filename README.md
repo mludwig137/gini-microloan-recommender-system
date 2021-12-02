@@ -53,10 +53,13 @@ Source: https://www.kiva.org/about
 
 
 ## <a name="data"></a>Data:
-The data for this study is available on kiva.org:
-https://www.kiva.org/build/data-snapshots
 
-Download 'Snapshots' as a CSV.
+### Get the Data:
+* The data for this study is available on kiva.org:
+https://www.kiva.org/build/data-snapshots
+* Download 'Snapshots' as a CSV: http://s3.kiva.org/snapshots/kiva_ds_csv.zip
+* Save the unzipped csv files to the 'raw' folder inside of the 'data' folder
+  * (data --> raw)
 
 This dataset consists of 3 csv files:
 
@@ -65,6 +68,73 @@ This dataset consists of 3 csv files:
 |lenders.csv|Kiva lender profiles|[Jump to the data dictionary](#lendersdict)|
 |loans_lenders.csv|a list of loans and the contributing lenders|[Jump to the data dictionary](#lldict)|
 |loans.csv|loans and their attributes|[Jump to the data dictionary](#loansdict)|
+
+### <a name="dict"></a>Data Dictionaries:
+#### <details><summary><a name="loansdict"></a>loans.csv</summary>
+|Column|Data Type|Description|
+|---|---|---|
+LOAN_ID|int|unique loan ID number|
+LOAN_NAME|object|name of lendee(s)|
+ORIGINAL_LANGUAGE|object|original language of description column|
+DESCRIPTION|object|description of the loan|
+DESCRIPTION_TRANSLATED|object|English translation of description if original is in another language|
+FUNDED_AMOUNT|float|Amount of loan that has been funded to date|
+LOAN_AMOUNT|float|amount of requested loan|
+STATUS|object|status of loan: funded, refunded, expired|
+IMAGE_ID|float|ID number of lendee profile photo|
+VIDEO_ID|float|ID number of lendee video|
+ACTIVITY_NAME|object|Activity category of loan. During cleaning for modeling, this column was dummified.|
+SECTOR_NAME|object|Sector category of loan within a certain Activity. During cleaning for modeling, this column was dummified.|
+LOAN_USE|object|description of how the loan would be used.|
+COUNTRY_CODE|object|a numerical value associated with a given country for ID purposes.|
+COUNTRY_NAME|object|lendee's country.|
+TOWN_NAME|object|lendee's town.|
+CURRENCY_POLICY|object|unused column|
+CURRENCY_EXCHANGE_COVERAGE_RATE|float|unused column|
+CURRENCY|object|unused column|
+PARTNER_ID|int|unused column|
+POSTED_TIME|object|Date and time when a loan was posted on the site.|
+PLANNED_EXPIRATION_TIME|object|expiration time of loan|
+DISBURSE_TIME|object|date/time when a loan was disbursed.|
+RAISED_TIME|object|date/time when a loan was fully funded.|
+LENDER_TERM|float|used column|
+NUM_LENDERS_TOTAL|int|the number of lenders who contributed to a given loan.|
+NUM_JOURNAL_ENTRIES|int|unused column|
+NUM_BULK_ENTRIES|int|unused column|
+TAGS|object|hashtags associated with the loan.|
+BORROWER_NAMES|object|names of lendees.|
+BORROWER_GENDERS|object|genders of lendees.|
+BORROWER_PICTURED|object|unused column|
+REPAYMENT_INTERVAL|object|unused column|
+DISTRIBUTION_MODEL|object|unused column|
+FEMALE_OPERATED|int|engineered column - binarized form of BORROWER_GENDERS. 1 if borrower(s) all female, otherwise 0.|
+</details>
+
+#### <details><summary><a name="lldict"></a>loans_lenders.csv</summary>
+|Column|Data Type|Description|
+|---|---|---|
+|LOAN_ID|int|unique loan ID number|
+|LENDERS|object|list of lenders who contributed to a loan.|
+</details>
+
+#### <details><summary><a name="lendersdict"></a>lenders.csv</summary>
+|Column|Data Type|Description|
+|---|---|---|
+|PERMANENT_NAME|object|username|
+|DISPLAY_NAME|object|lender's display name on site.|
+|MAIN_PIC_ID|float|used column|
+|CITY|object|lender's city|
+|STATE|object|lender's state|
+|COUNTRY_CODE|object|lender's country|
+|MEMBER_SINCE|int|when lender joined kiva.org|
+|PERSONAL_URL|object|lender's URL|
+|OCCUPATION|object|lender's occupation|
+|LOAN_BECAUSE|object|a lender's description of why they contribute to loans with Kiva.|
+|OTHER_INFO|object|unused column|
+|LOAN_PURCHASE_NUM|int|loans contributed to|
+|INVITED_BY|object|username of lender who invited new user|
+|NUM_INVITED|int|number of people a user has invited to join the site|
+</details>
 
 #### Data Cleaning Steps: loans.csv
 1. Dropped nulls:  Nulls banded by age and rows with majority missing values.
@@ -117,67 +187,3 @@ Throughout the course of this project, we observed the need for further actions 
 * PBS Frontline: https://www.pbs.org/frontlineworld/stories/uganda601/history.html
 * Zidisha: https://www.zidisha.org/how-it-works
 * Kiva: https://www.kiva.org/
-
-### <a name="dict"></a>Data Dictionaries:
-#### <a name="loansdict"></a>loans.csv
-|Column|Data Type|Description|
-|---|---|---|
-LOAN_ID|int|unique loan ID number|
-LOAN_NAME|object|name of lendee(s)|
-ORIGINAL_LANGUAGE|object|original language of description column|
-DESCRIPTION|object|description of the loan|
-DESCRIPTION_TRANSLATED|object|English translation of description if original is in another language|
-FUNDED_AMOUNT|float|Amount of loan that has been funded to date|
-LOAN_AMOUNT|float|amount of requested loan|
-STATUS|object|status of loan: funded, refunded, expired|
-IMAGE_ID|float|ID number of lendee profile photo|
-VIDEO_ID|float|ID number of lendee video|
-ACTIVITY_NAME|object|Activity category of loan. During cleaning for modeling, this column was dummified.|
-SECTOR_NAME|object|Sector category of loan within a certain Activity. During cleaning for modeling, this column was dummified.|
-LOAN_USE|object|description of how the loan would be used.|
-COUNTRY_CODE|object|a numerical value associated with a given country for ID purposes.|
-COUNTRY_NAME|object|lendee's country.|
-TOWN_NAME|object|lendee's town.|
-CURRENCY_POLICY|object|unused column|
-CURRENCY_EXCHANGE_COVERAGE_RATE|float|unused column|
-CURRENCY|object|unused column|
-PARTNER_ID|int|unused column|
-POSTED_TIME|object|Date and time when a loan was posted on the site.|
-PLANNED_EXPIRATION_TIME|object|expiration time of loan|
-DISBURSE_TIME|object|date/time when a loan was disbursed.|
-RAISED_TIME|object|date/time when a loan was fully funded.|
-LENDER_TERM|float|used column|
-NUM_LENDERS_TOTAL|int|the number of lenders who contributed to a given loan.|
-NUM_JOURNAL_ENTRIES|int|unused column|
-NUM_BULK_ENTRIES|int|unused column|
-TAGS|object|hashtags associated with the loan.|
-BORROWER_NAMES|object|names of lendees.|
-BORROWER_GENDERS|object|genders of lendees.|
-BORROWER_PICTURED|object|unused column|
-REPAYMENT_INTERVAL|object|unused column|
-DISTRIBUTION_MODEL|object|unused column|
-FEMALE_OPERATED|int|engineered column - binarized form of BORROWER_GENDERS. 1 if borrower(s) all female, otherwise 0.|
-
-#### <a name="lldict"></a>loans_lenders.csv
-|Column|Data Type|Description|
-|---|---|---|
-|LOAN_ID|int|unique loan ID number|
-|LENDERS|object|list of lenders who contributed to a loan.|
-
-#### <a name="lendersdict"></a>lenders.csv
-|Column|Data Type|Description|
-|---|---|---|
-|PERMANENT_NAME|object|username|
-|DISPLAY_NAME|object|lender's display name on site.|
-|MAIN_PIC_ID|float|used column|
-|CITY|object|lender's city|
-|STATE|object|lender's state|
-|COUNTRY_CODE|object|lender's country|
-|MEMBER_SINCE|int|when lender joined kiva.org|
-|PERSONAL_URL|object|lender's URL|
-|OCCUPATION|object|lender's occupation|
-|LOAN_BECAUSE|object|a lender's description of why they contribute to loans with Kiva.|
-|OTHER_INFO|object|unused column|
-|LOAN_PURCHASE_NUM|int|loans contributed to|
-|INVITED_BY|object|username of lender who invited new user|
-|NUM_INVITED|int|number of people a user has invited to join the site|
