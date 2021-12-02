@@ -168,14 +168,30 @@ if page == 'Visualizations':
             plt.ylabel('Loan Amount', fontsize=14)
             plt.xlabel('Country Name', fontsize=14)
 
+        def time_trend_by_country(country_name):
+            time_df = df.copy()
+            time_df['POSTED_TIME'] = pd.to_datetime(time_df['POSTED_TIME'], utc=True)
+            time_df.set_index('POSTED_TIME', inplace=True)
+            time_df.sort_index(inplace=True)
+            # df = time_df[time_df['COUNTRY_NAME'] == country_name]
+            plt.figure(figsize=(12, 8))
+            plt.plot(df['COUNTRY_NAME'].groupby([time_df.index.year]).agg('count'))
+            plt.title(f'Loans Per Year from 2006-2021 in {country_name}', fontsize=16)
+            plt.xlabel('Year', fontsize=14)
+            plt.ylabel('Loans Counts', fontsize=14);
+
 
         if df.empty:
             st.write('Sorry, we don\'t have enough data on that country yet. Please select another.')
         else:
+            st.pyplot(time_trend_by_country(country_name))
             st.pyplot(country_by_sector_bar(country_name))
             st.pyplot(loan_average(country_name))
             st.pyplot(country_by_gender(country_name))
             st.pyplot(country_by_loan_amount(country_name))
+
+
+
 
 
     if user_choice == 'Data by Sector':
@@ -200,6 +216,18 @@ if page == 'Visualizations':
             plt.xlabel('Country', fontsize=14)
             plt.title(f'Top Ten Countries for {sector} Loans', fontsize=16);
 
+        def time_trend_by_sector(sector):
+            time_df = df.copy()
+            time_df['POSTED_TIME'] = pd.to_datetime(time_df['POSTED_TIME'], utc=True)
+            time_df.set_index('POSTED_TIME', inplace=True)
+            time_df.sort_index(inplace=True)
+            # df = time_df[time_df['COUNTRY_NAME'] == country_name]
+            plt.figure(figsize=(12, 8))
+            plt.plot(df['COUNTRY_NAME'].groupby([time_df.index.year]).agg('count'))
+            plt.title(f'Loans Per Year from 2006-2021: {sector}', fontsize=16)
+            plt.xlabel('Year', fontsize=14)
+            plt.ylabel('Loans Counts', fontsize=14);
+
 
         def loan_amount_by_sector(sector):
 
@@ -222,6 +250,7 @@ if page == 'Visualizations':
             plt.title(f'Activity Breakdown for {sector} Loans', fontsize=16);
 
         st.pyplot(get_ten_countries_sector(sector))
+        st.pyplot(time_trend_by_sector(sector))
         st.pyplot(loan_amount_by_sector(sector))
         st.pyplot(get_activities(sector))
 

@@ -10,7 +10,7 @@ This ReadMe contains:
 * [Project Contents](#contents)
 * [Problem Statement](#problemstatement)
 * [Background](#background)
-* [A description of the data / Data Dictionary](#data)
+* [A description of the data and Project Requirements](#data)
 * [Modeling and Analysis](#model)
 * [Conclusion](#conclusion)
 * [Sources](#sources)
@@ -65,6 +65,8 @@ This dataset consists of 3 csv files:
 |loans_lenders.csv|a list of loans and the contributing lenders|
 |loans.csv|loans and their attributes|
 
+#### Data Cleaning Steps
+
 
 ### Data Dictionaries:
 #### lenders.csv
@@ -74,9 +76,11 @@ This dataset consists of 3 csv files:
 
 #### loans_lenders.csv
 
-
-
-
+### Project Requirements:   
+* streamlit==1.1.0
+* joblib==1.1.0
+* pandas==1.2.4
+* scikit-learn==1.0.1
 
 ## <a name="model"></a>Modeling and Analysis
 We created 2 main recommender system models:
