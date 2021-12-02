@@ -1,10 +1,15 @@
 import streamlit as st
+import requests
 
 import numpy as np
 import pandas as pd
 
 import matplotlib.pyplot as plt
 import seaborn as sns
+
+from PIL import Image
+from io import BytesIO
+import re
 
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -532,7 +537,7 @@ if page == "Content Based Filtering":
     #                   axis = 1).astype(np.uint8)
     X = X.to_numpy()
 
-    #st.set_page_config(layout="wide")
+    # st.set_page_config(layout="wide")
 
     @st.cache()
 
@@ -567,8 +572,7 @@ if page == "Content Based Filtering":
         return top_loan_ids
 
     st.title("Content Based Filter")
-    st.write("Select 5 or projects you're interested in and we'll find a match.")
-    st.write("Tell us which sector interest you the most.")
+    st.write("Tell us which sector interests you the most.")
 
     cols = st.columns(5)
     agro_sector = cols[0].checkbox("Agriculture")
@@ -584,8 +588,7 @@ if page == "Content Based Filtering":
     health_sector = cols2[3].checkbox("Health")
     manufacturing_sector = cols2[4].checkbox("Manufacturing")
 
-    st.write("Tell us about the projects and people you are interested in.")
-    st.write("Please select 5 or more")
+    st.write("Tell us about the projects and people you are interested in by selecting 5 or more items below.")
 
     cols3 = st.columns(5)
     livestock = cols3[0].checkbox("Livestock")
@@ -749,7 +752,44 @@ if page == "Content Based Filtering":
 
         recommendations = recommend(user)
 
-        st.write(recommendations)
+        for i in range(0, 4):
+            loan_id = recommendations[i][1]
+            base_url = 'https://api.kivaws.org/graphql?query='
+            graphql_query = '{lend {loan (id: %s){id name gender image {id url} description use geocode{country{name}} loanAmount sector{name}}}}'   %loan_id
+
+            r = requests.post(base_url + graphql_query)
+            r = r.json()
+            url = r['data']['lend']['loan']['image']['url']
+            url_600 = re.sub("s100", "s600", url)
+
+            response = requests.get(url_600)
+            img = Image.open(BytesIO(response.content))
+            img.resize((500,500), Image.ANTIALIAS)
+
+            if i in [0, 1]:
+                cols = st.columns(2)
+                cols[i].image(img)
+                cols[i].write(f'Name: {r["data"]["lend"]["loan"]["name"]}')
+                cols[i].write(f'Country: {r["data"]["lend"]["loan"]["geocode"]["country"]["name"]}')
+                cols[i].write(f'Sector: {r["data"]["lend"]["loan"]["sector"]["name"]}')
+                cols[i].write(f'Use: {r["data"]["lend"]["loan"]["use"].capitalize()}')
+                cols[i].write(f'Loan Amount: {r["data"]["lend"]["loan"]["loanAmount"]}')
+                cols[i].write("Description:")
+                cols[i].write(re.sub("\\r|\\n|\\t|---|<br />", "", r["data"]["lend"]["loan"]["description"])[0:1000] + "...")
+
+
+            if i in [2, 3]:
+                i = i - 2
+                cols2 = st.columns(2)
+                cols2[i].image(img)
+                cols2[i].write(f'Name: {r["data"]["lend"]["loan"]["name"]}')
+                cols2[i].write(f'Country: {r["data"]["lend"]["loan"]["geocode"]["country"]["name"]}')
+                cols2[i].write(f'Sector: {r["data"]["lend"]["loan"]["sector"]["name"]}')
+                cols2[i].write(f'Use: {r["data"]["lend"]["loan"]["use"].capitalize()}')
+                cols2[i].write(f'Loan Amount: {r["data"]["lend"]["loan"]["loanAmount"]}')
+                cols2[i].write("Description:")
+                cols2[i].write(re.sub("\\r|\\n|\\t|---|<br />", "", r["data"]["lend"]["loan"]["description"])[0:500] + "...")
+
 
         # for i in range(5):
         #     loan_id = recommendations[i][1]
