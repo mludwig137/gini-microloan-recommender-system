@@ -96,15 +96,20 @@ We created 2 main recommender system models:
 
 
 ### <a name="user"></a> User Based Model
+We decided to focus on a recommender system geared towards Kiva Teams to increase a sense of community on the platform and overall number of loans made. Kiva Teams are an important feature on Kiva's website, which organizes groups of users together who share similar goals. 
 
+To set up the recommender the system, a sparse matrix was created to be able to calculate similarities between users by finding their pairwise distances based on the loans each user has made. We focused on the top 5 most similar users. 
 
+For implementation, we used Kiva's API to source what Teams a user belongs to along with that team's description and statistics. This information is then displayed as the system's final output for the top 5 most recommended Teams.
+
+We envision Kiva's marketing team being able to use this system to send out monthly newsletters to lenders showing them 5 Teams they should check out. We would create a feedback loop over time to measure success by how many members actually joined one of these teams after receiving this email. 
 
 
 ## <a name="conclusion"></a>Conclusion:
 ### Limitations and Recommendations for next steps:
 Throughout the course of this project, we observed the need for further actions in several capacities:
 
-* True P2P Microloan future utilizing decentralized financial systems.
+* True P2P Microloan future utilizing decentralized financial systems currently in place like Cardano (ADA).
 * Recommender system improvements - data size constraints limiting the ability to process all the data at once. Downsampled to create proof of concept systems.  
 * While we reached out to the Grameen Bank in the hopes of gaining access to data related to their microlending operation, we did not receive a response. We recommend gathering data from several microlending organizations to compare effectiveness of differing strategies. It would be particularly interesting to study data from Zidisha, an organization which focuses solely on direct lender to entrepreneur loans, without an intermediary such as a field partner.
 
