@@ -55,6 +55,15 @@ Source: https://www.kiva.org/about
 
 ## <a name="data"></a>Data:
 
+### Data Directory Structure:
+Create the directory structure seen in repository.
+```
+data/
+|__ raw/
+|__ transformed/
+```
+
+
 ### Get the Data:
 * The data for this study is available on kiva.org:
 https://www.kiva.org/build/data-snapshots
@@ -70,7 +79,6 @@ This dataset consists of 3 csv files:
 |loans_lenders.csv|a list of loans and the contributing lenders|[Jump to the data dictionary](#lldict)|
 |loans.csv|loans and their attributes|[Jump to the data dictionary](#loansdict)|
 
-
 #### Data Cleaning Steps: loans.csv
 1. Dropped nulls:  Nulls banded by age and rows with majority missing values.
 2. Combined Description and Description translated columns to have one Description column in English.
@@ -80,10 +88,14 @@ This dataset consists of 3 csv files:
 
 
 ### Project Requirements:   
-* streamlit==1.1.0
-* joblib==1.1.0
-* pandas==1.2.4
-* scikit-learn==1.0.1
+* matplotlib==3.5.0
+* nltk==3.6.5
+* numpy==1.21.2
+* pandas==1.3.4
+* Pillow==8.4.0
+* requests==2.26.0
+* scikit_learn==1.0.1
+* seaborn==0.11.2
 
 ## <a name="model"></a>Modeling and Analysis
 We created 2 main recommender system models:
@@ -92,6 +104,13 @@ We created 2 main recommender system models:
 
 
 ### <a name="content"></a>  Content Based Model
+The content based filter matches funders and entrepeneurs based on similarities between an individual user's interests and an entrepenur's project/loan application.
+
+To accomplish this an entrepeneur's loan application has all its free form text features agglomerated and processed to extract key phrase(n-grams) that can be used to augment a loan's list of features. This adds context to the loan application and allows for finer seperation of loan applications in the same sector.
+
+When a new funder creates a profile they are prompted to complete a quiz on the types of projects they're interested in funding. This addresses the "cold start" problem and acts as initial data collection for the user. This quiz is used to create a synthetic loan and similar loans are returned displaying a picture, name, country, and description of the top four results.
+
+A pipeline of text data is created to allow future developements where user impressions and text data are fed into a learned embedding model to create a contextual model of users. Funders and entrepeneurs can be clustered and as a result tacit relations between users can be captured, resulting in a personalized experience. 
 
 
 
